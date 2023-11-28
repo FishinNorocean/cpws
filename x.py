@@ -16,10 +16,10 @@ model = AutoModel.from_pretrained(Model_path, trust_remote_code=True, device='cu
 model = model.eval()
 
 # basic prompt
-bsc_prpt="请你从这段文本中找到原告, 原告性别（若是企业则回答企业）, 被告, 被告性别（若是企业则回答企业）, 并判断被告是否胜诉（并说明原因），回答格式为markdown表格代码，原告：，原告性别：，被告：，被告性别：，被告是否胜诉（及原因）：， "
+bsc_prpt="请你从这段文本中找到原告, 原告性别（若是企业则回答企业）, 被告, 被告性别（若是企业则回答企业）, 并判断被告是否胜诉（并说明原因），回答格式为markdown表格代码，原告：，原告性别：，被告：，被告性别：，被告是否胜诉：，这么判断胜诉与否的原因： "
 
 # basic datafrmae
-df_output = pd.DataFrame(columns=["File","Row","Trial","原因", "原告", "原告性别", "被告", "被告性别", "被告是否胜诉"])
+df_output = pd.DataFrame(columns=["File","Row","Trial","Error", "原告", "原告性别", "被告", "被告性别", "被告是否胜诉", "判断的原因"])
 
 
 
@@ -51,14 +51,18 @@ def process_data(df,file_name):
     global df_output
     num_rows = min(101, df.shape[0])
     i = 0
-    while i < num_rows:#这里要注意从第几行开始算，如果第一行没有标题的就填-1，有标题填0，不然会落，这里python索引是从0开始算第一行，所以要-1
+    for i in range(0, num_rows):#这里要注意从第几行开始算，如果第一行没有标题的就填-1，有标题填0，不然会落，这里python索引是从0开始算第一行，所以要-1
         
         cell_value = df.iloc[i, 14]
-        i = i + 1
+        if type(cell_value) == float:
+            row = pd.DataFrame({'File':file_name, 'Row':int(i), 'Trial':int(trial), 'Error': "Empty cell", '原告': None, '原告性别': None, '被告': None, '被告性别': None, '被告是否胜诉': None}, index=[0])
+            continue
+        elif len(cell_value) < 40:
+            row = pd.DataFrame({'File':file_name, 'Row':int(i), 'Trial':int(trial), 'Error': "Cell length too short", '原告': None, '原告性别': None, '被告': None, '被告性别': None, '被告是否胜诉': None}, index=[0])
+            continue
         prompt = str(cell_value) + bsc_prpt
         trial = 0
-        while trial < 5:
-            trial = trial + 1
+        for trial in range(5):
             try:
                 response, history = model.chat(tokenizer, prompt, history=[])
                 good_response = True

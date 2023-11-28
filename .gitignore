@@ -3,3 +3,4 @@ data/
 results/
 debug.results/
 __pycache__/
+gpu_status.log

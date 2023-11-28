@@ -9,4 +9,6 @@ else
     echo "./results directory already exists"
 fi
 
-sbatch run.sh
+sbatch run.sh &
+
+watch -n 2 "cat gpu_status.log"

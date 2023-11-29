@@ -8,11 +8,11 @@ import re
 
 # The package os and the following line of code get your working directory so don't worry about your working directory
 PJ_path = os.path.dirname(os.path.abspath(__file__))
-Model_path = os.path.join(PJ_path, 'chatglm3-6b')
+Model_path = os.path.join(PJ_path, 'chatglm3-6b-32k')
 # import the model and initialize the dialog
 from transformers import AutoTokenizer, AutoModel
 tokenizer = AutoTokenizer.from_pretrained(Model_path, trust_remote_code=True)
-model = AutoModel.from_pretrained(Model_path, trust_remote_code=True, device='cuda')
+model = AutoModel.from_pretrained(Model_path, trust_remote_code=True).half().cuda()
 model = model.eval()
 
 
@@ -68,7 +68,7 @@ def process_data(df,file_name):
         elif len(cell_value) < 40:
             row = pd.DataFrame({'File':file_name, 'Row':int(i), 'Trial':int(trial), 'Error': "Cell length too short", '原告': None, '原告性别': None, '被告': None, '被告性别': None, '被告是否胜诉': None, '判断的原因':None}, index=[0])
 
-        elif len(cell_value) > 8000:
+        elif len(cell_value) > 32000:
             row = pd.DataFrame({'File':file_name, 'Row':int(i), 'Trial':int(trial), 'Error': "Prompt too long", '原告': None, '原告性别': None, '被告': None, '被告性别': None, '被告是否胜诉': None, '判断的原因':None}, index=[0])
 
         else:

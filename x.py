@@ -165,6 +165,9 @@ model = None
 
 logger_main.debug(f"Something too long: {str(sth_TL)}\n")
 
+if sth_TL:
+    process_data_32k(df_Toolong)
+
 def process_data_32k(df):
     global df_output
     file_name = "32k"
@@ -213,6 +216,8 @@ def process_data_32k(df):
             logger_b.debug(f"Error at appending: {Error}")
     logger_b.debug(f"{file_name} finished running.")
 
- 
+df_output_sorted = df_output.sort_values(by=['File', 'Row'])
+df_output_sorted.to_excel(os.path.join(PJ_path, 'results/output_sorted_32k.xlsx'), index=False)
+df_output_sorted.to_csv(os.path.join(PJ_path, 'results/output_sorted_32k.csv'), index=False)
 
 logger_main.debug("Script finished running.")

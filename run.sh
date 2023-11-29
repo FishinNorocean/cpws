@@ -9,6 +9,7 @@
 export PATH=/share/apps/cuda-12.1/bin:/share/apps/anaconda3/py385-2020.11/bin:$PATH 
 
 ./GPU_check.sh &
-python 32_x.py
+python x.py
+# python 32_x.py
 echo "done"
 pkill -f GPU_check.sh

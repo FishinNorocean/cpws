@@ -5,3 +5,4 @@ debug.results/
 __pycache__/
 gpu_status.log
 chatglm3-6b-32k/
+log/

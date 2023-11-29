@@ -13,7 +13,7 @@ PJ_path = os.path.dirname(os.path.abspath(__file__))
 Model_path = os.path.join(PJ_path, 'chatglm3-6b-32k')
 
 # Log
-log_file_bsc = open(os.path.join(PJ_path, 'log/32_File_bsc.log'), "a")
+log_file_bsc = open(os.path.join(PJ_path, 'log/File_bsc.log'), "a")
 log_file_bsc.truncate(0)
 log_file_bsc.write(f"Script started running at {str(datetime.datetime.now())} \n")
 
@@ -118,21 +118,18 @@ def process_data(df,file_name):
     df_output_sorted = df_output.sort_values(by=['File', 'Row'])
     df_output_sorted.to_excel(os.path.join(PJ_path, 'results/output_sorted.xlsx'), index=False)
     df_output_sorted.to_csv(os.path.join(PJ_path, 'results/output_sorted.csv'), index=False)
+    
 
 
-df1 = pd.read_excel(os.path.join(PJ_path, 'data/1-100.xlsx'), sheet_name='Sheet1')
+
+df1 = pd.read_excel(os.path.join(PJ_path, 'data/1-5.xlsx'), sheet_name='Sheet1')
+
 
 t1 = threading.Thread(target=process_data, args=(df1,"1-100.xlsx"))
-t2 = threading.Thread(target=process_data, args=(df2,"101-200.xlsx"))
-t3 = threading.Thread(target=process_data, args=(df3,"201-300.xlsx"))
+
 
 t1.start()
-t2.start()
-t3.start()
 
 t1.join()
-t2.join()
-t3.join()
-
 log_file_bsc.write(f"Script finished running at {str(datetime.datetime.now())} \n")
 log_file_bsc.close()

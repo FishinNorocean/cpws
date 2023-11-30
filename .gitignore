@@ -8,3 +8,4 @@ chatglm3-6b-32k/
 log/
 acu_results/
 id.sh
+acu_main.log

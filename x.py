@@ -161,6 +161,7 @@ def process_data(df,file_name):
 
 def process_data_32k(df):
     global df_output
+    global df_32k_output
     file_name = "32k"
     open(os.path.join(PJ_path, 'results/{}.log'.format(file_name)), 'w').close()
     logger_b = logging.getLogger('logger_{}'.format(file_name))

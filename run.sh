@@ -13,9 +13,9 @@ python x.py
 #python single_32.py
 source id.sh
 touch results/acu_main.log
-echo "Jobid: $last_job_id" >> results/acu_main.log
-cat results/main.log >> results/acu_main.log  # 添加要追加的内容，并换行
-echo "" >> results/acu_main.log 
+echo "Jobid: $last_job_id" >> acu_main.log
+cat results/main.log >> acu_main.log  # 添加要追加的内容，并换行
+echo "" >> acu_main.log 
 
 cp -r results "acu_results/results_$last_job_id"
 

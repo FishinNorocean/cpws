@@ -108,12 +108,12 @@ def process_data(df,file_name):
     handler_b.setFormatter(public_formatter)
     logger_b.addHandler(handler_b)
 
-    logger_b.debug(f"{file_name} started processing...")
+    logger_b.debug(f"{file_name} started processing...\n")
 
     num_rows = min(101, df.shape[0])
     for i in range(num_rows):#这里要注意从第几行开始算，如果第一行没有标题的就填-1，有标题填0，不然会落，这里python索引是从0开始算第一行，所以要-1
         row = None
-        logger_b.debug(f"Row {str(int(i))} - started processing...")
+        logger_b.debug(f"Row {str(int(i))} - started processing...\n")
         data = "Not processed"
         cell_value = df.iloc[i, 14]
         logger_b.debug(f"Cell value: {cell_value} \n")

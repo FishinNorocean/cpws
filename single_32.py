@@ -122,7 +122,7 @@ def process_data_32k(df):
                 logger_b.debug(f"Data: {str(data)}\n")
 
                 if not isinstance(data, str) and len(data) == 6:  # 如果format没毛病
-                    row = pd.DataFrame({'File':file_name, 'Row':int(i),'Trial':int(trial), '原因': None, '原告': data[0], '原告性别': data[1], '被告': data[2], '被告性别': data[3], '被告是否胜诉': data[4], '判断的原因':data[5]}, index=[0])
+                    row = pd.DataFrame({'File':file_name, 'Row':int(i),'Trial':int(trial), 'Error': None, '原告': data[0], '原告性别': data[1], '被告': data[2], '被告性别': data[3], '被告是否胜诉': data[4], '判断的原因':data[5]}, index=[0])
                     break # 结束 trial 循环
                 else:
                     row = pd.DataFrame({'File':file_name, 'Row':int(i), 'Trial':int(trial), 'Error': data, '原告': None, '原告性别': None, '被告': None, '被告性别': None, '被告是否胜诉': None, '判断的原因':None}, index=[0])

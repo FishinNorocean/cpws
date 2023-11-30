@@ -1,22 +1,22 @@
 #!/bin/bash
-echo "Initializing"
-directory="./results"  
-if [ ! -d "$directory" ]; then
-    echo "./results directory isn't here. Setting it up..."
-    mkdir -p "$directory" 
-    echo "Done"
+echo "Initializing..."
+echo "Emptying last result."
+if [ -f "id.sh" ]; then
+    source id.sh
+    mkdir -p "$HOME/.Trash/results_$last_job_id"
+    mv results/ "$HOME/.Trash/results_$last_job_id"
 else
-    echo "./results directory already exists"
-fi
-log_d = "./log"
-if [ ! -d "$log_d" ]; then
-    echo "./log log isn't here. Setting it up..."
-    mkdir -p "$directory" 
-    echo "Done"
-else
-    echo "./log directory already exists"
+    echo "No last run."
+    rm -rf results
 fi
 
-sbatch run.sh &
+mkdir results
+mkdir -p acu_results
+echo "Done."
 
-watch -n 1 "squeue; cat gpu_status.log"
+job_id=$(sbatch run.sh | awk '{print $4}')
+echo "export last_job_id=\"$job_id\"" > id.sh
+echo "Monitoring cession starting..."
+sleep 4
+./monitor.sh
+

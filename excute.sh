@@ -3,13 +3,12 @@ echo "Initializing..."
 echo "Emptying last result."
 if [ -f "id.sh" ]; then
     source id.sh
-    mkdir -p "$HOME/.Trash/results_$last_job_id"
     mv results/ "$HOME/.Trash/results_$last_job_id"
+elif [ -d "results" ]; then
+    mv results/ "$Home/.Trash/results"
 else
     echo "No last run."
-    rm -rf results
 fi
-
 mkdir results
 mkdir -p acu_results
 echo "Done."

@@ -3,10 +3,8 @@
 # This project is built up by Sang Wenkai(zju), in order to get data from Judgement Document with AI. (Also great gratitude to Zhe Yuan and Dengkun Chen for their warm and helpful guidance.)
 
 # set up
-import pandas as pd
-import logging
-import signal
-from main import PJ_path, LOG_path, public_formatter, bsc_prpt, logger_main, df_output, time_32k as time_lim
+import pandas as pd, logging, signal, os, time
+from set_up import PJ_path, LOG_path, public_formatter, bsc_prpt, logger_main, time_32k as time_lim
 
 # import the model and initialize the dialog
 Model_path = os.path.join(PJ_path, 'chatglm3-6b-32k')
@@ -64,6 +62,7 @@ def format_output(output):
 
 
 def process_data(df,file_name):
+    df_output = pd.DataFrame()
     df_Toolong = pd.DataFrame()
     open(os.path.join(LOG_path, '{}.log'.format(file_name)), 'w').close()
     logger_b = logging.getLogger('logger_{}'.format(file_name))
@@ -91,8 +90,10 @@ def process_data(df,file_name):
             logger_b.debug(f"Prompt setted.\n")
             for trial in range(5):
                 logger_b.debug(f"Trial {trial} - started running...\n")
+                st_time = time.time()
                 response, history = respond_in_time(tokenizer, model, prompt, time_lim)
-                logger_b.debug(f"Response {trial}: {response} \n")
+                duration = time.time() - st_time
+                logger_b.debug(f"Response {trial} in {duration:.3f} seconds: {response} \n")
                 if response:
                     data = format_output(response)
                 else:

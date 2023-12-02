@@ -1,5 +1,6 @@
 #!/bin/bash
 echo "Initializing..."
+cd "$HOME/swk_cpws_1.0/"
 echo "Emptying last result."
 if [ -f "id.sh" ]; then
     source id.sh

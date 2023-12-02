@@ -3,10 +3,8 @@
 # This project is built up by Sang Wenkai(zju), in order to get data from Judgement Document with AI. (Also great gratitude to Zhe Yuan and Dengkun Chen for their warm and helpful guidance.)
 
 # set up
-import pandas as pd
-import logging
-import signal
-from main import PJ_path, LOG_path, public_formatter, bsc_prpt, logger_main, df_output, time_8k as time_lim
+import pandas as pd, logging, time, os
+from set_up import PJ_path, LOG_path, public_formatter, bsc_prpt, logger_main, time_8k as time_lim
 
 # import the model and initialize the dialog
 Model_path = os.path.join(PJ_path, 'chatglm3-6b')
@@ -16,24 +14,6 @@ model = AutoModel.from_pretrained(Model_path, trust_remote_code=True, device='cu
 model = model.eval()
 
 logger_main.debug('Model_8 has been loaded.')
-
-
-
-def respond_in_time(tokenizer, model, prompt, time_lim):
-    def handler(signum, frame):
-        raise TimeoutError("")
-
-    # 设置超时处理程序
-    signal.signal(signal.SIGALRM, handler)
-    signal.alarm(time_lim)  # 设置超时时间
-    try:
-        # 这里放置你的代码
-        response, history = model.chat(tokenizer, prompt, history=[])
-        signal.alarm(0)  # 取消超时
-        return response, history
-    except TimeoutError as e:
-        return None, None
-
 
 def format_output(output):
     try:
@@ -66,6 +46,7 @@ def format_output(output):
 
 
 def process_data(df,file_name):
+    df_output = pd.DataFrame()
     df_Toolong = pd.DataFrame()
     open(os.path.join(LOG_path, '{}.log'.format(file_name)), 'w').close()
     logger_b = logging.getLogger('logger_{}'.format(file_name))
@@ -82,7 +63,7 @@ def process_data(df,file_name):
         logger_b.debug(f"Row {str(int(i))} - started processing...\n")
         data = "Not processed"
         cell_value = df.iloc[i, 16]
-        logger_b.debug(f"Length: {len(cell_value)}; Text: {cell_value}\n")
+        logger_b.debug(f"Text: {cell_value}\n")
         if type(cell_value) == float:
             row = pd.DataFrame({'File':df.iloc[i,0], 'Row':df.iloc[i,1], 'Trial':None, 'Error': "Empty cell", '原告': None, '原告性别': None, '被告': None, '被告性别': None, '被告是否胜诉': None, '判断的原因':None}, index=[0])
 
@@ -98,12 +79,16 @@ def process_data(df,file_name):
             logger_b.debug(f"Prompt setted.\n")
             for trial in range(5):
                 logger_b.debug(f"Trial {trial} - started running...\n")
-                response, history = respond_in_time(tokenizer, model, prompt, time_lim)
-                logger_b.debug(f"Response {trial}: {response} \n")
-                if response:
-                    data = format_output(response)
-                else:
-                    data = "Timed out."
+                try:
+                    st_time = time.time()
+                    response, history = model.chat(tokenizer, prompt, history=[])
+                    duration = time.time() - st_time
+                    logger_b.debug(f"Response {trial} in {duration:.3f} seconds: {response} \n")
+                except Exception as Error:
+                    row = pd.DataFrame({'File':file_name, 'Row':int(i), 'Trial':int(trial), 'Error': "Failed response", '原告': None, '原告性别': None, '被告': None, '被告性别': None, '被告是否胜诉': None, '判断的原因':None}, index=[0])
+                    logger_b.debug(f"Response failed. \n")
+                    break # 结束trial 循环，反正寄了，再试还是寄
+                data = format_output(response)
                 logger_b.debug(f"Data: {str(data)}\n")
 
                 if not isinstance(data, str) and len(data) == 6:  # 如果format没毛病

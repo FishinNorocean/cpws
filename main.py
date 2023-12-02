@@ -3,7 +3,7 @@
 # This project is built up by Sang Wenkai(zju), in order to get data from Judgement Document with AI. (Also great gratitude to Zhe Yuan and Dengkun Chen for their warm and helpful guidance.)
 
 import pandas as pd, threading, logging, os, concurrent.futures
-from set_up import bsc_prpt, time_8k, time_32k, PJ_path, LOG_path, OUT_path, DATA_path, logger_main, JOB_id, max_threads
+from set_up import bsc_prpt, time_8k, time_32k, PJ_path, LOG_path, OUT_path, DATA_path, logger_main, logger_files, JOB_id, max_threads
 
 logger_main.debug("Main started running...")
 
@@ -46,19 +46,21 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=max_threads) as executor:
         try:
             file_name, extension = file.rsplit('.', 1)
         except:
-            logger_main.error(f"File {file} : directory.")
-            break
+            logger_files.info(f"File {file} : directory.")
+            continue
         if extension == 'xlsx' or extension == 'xls':
+            logger_files.info(f"File {file} : excel.")
             df = pd.read_excel(os.path.join(DATA_path, file), sheet_name='Sheet1', header=0)
             num = df.shape[0]
             total_num = total_num + num
         elif extension == 'csv':
+            logger_files.info(f"File {file} : csv.")
             df = pd.read_csv(os.path.join(DATA_path, file), header=0)
             num = df.shape[0]
             total_num = total_num + num
         else:
-            logger_main.error(f"File {file} : unsupported.")
-            break
+            logger_files.info(f"File {file} : unsupported.")
+            continue
         df_index = pd.DataFrame({'File': [file for i in range(num)], 'Row': [i for i in range(num)]})
         df = pd.concat([df_index, df], axis=1)
         future = executor.submit(process_data, df, file_name, False)

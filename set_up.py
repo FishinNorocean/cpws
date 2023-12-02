@@ -73,7 +73,7 @@ logger_files.setLevel(logging.DEBUG)
 handler_files = logging.FileHandler(os.path.join(LOG_path, 'files.log'))
 handler_files.setLevel(logging.DEBUG)
 handler_files.setFormatter(public_formatter)
-logger_files.addHandler(handler_filesr)
+logger_files.addHandler(handler_files)
 
 logger_main.debug("Set up done.")
 

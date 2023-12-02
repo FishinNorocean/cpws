@@ -43,7 +43,11 @@ total_num = 0
 with concurrent.futures.ThreadPoolExecutor(max_workers=max_threads) as executor:
     futures = []
     for file in file_list:
-        file_name, extension = file.rsplit('.', 1)
+        try:
+            file_name, extension = file.rsplit('.', 1)
+        except:
+            logger_main.error(f"File {file} : directory.")
+            break
         if extension == 'xlsx' or extension == 'xls':
             df = pd.read_excel(os.path.join(DATA_path, file), sheet_name='Sheet1', header=0)
             num = df.shape[0]
@@ -54,6 +58,7 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=max_threads) as executor:
             total_num = total_num + num
         else:
             logger_main.error(f"File {file} : unsupported.")
+            break
         df_index = pd.DataFrame({'File': [file for i in range(num)], 'Row': [i for i in range(num)]})
         df = pd.concat([df_index, df], axis=1)
         future = executor.submit(process_data, df, file_name, False)

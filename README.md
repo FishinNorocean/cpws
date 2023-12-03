@@ -19,7 +19,7 @@ pip config set global.index-url https://mirrors.zju.edu.cn/pypi/web/simple
 
 ## To run:
 
-Just launch your terminal and chage the directory towards this folder.
+Just launch your terminal and change the directory towards this folder.
 
 Edit the key variables in `set_up.py`, especially change the data directory.
  - `data_dir` is the directory where data you want to process has been stored. 

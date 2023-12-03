@@ -3,60 +3,31 @@
 # This project is built up by Sang Wenkai(zju), in order to get data from Judgement Document with AI. (Also great gratitude to Zhe Yuan and Dengkun Chen for their warm and helpful guidance.)
 
 # set up
-import pandas as pd, logging, time, os
-from set_up import PJ_path, LOG_path, public_formatter, bsc_prpt, logger_main, time_8k as time_lim
+import pandas as pd, logging, time, os, set_up
+from func_timeout import func_timeout
 
 # import the model and initialize the dialog
-Model_path = os.path.join(PJ_path, 'chatglm3-6b')
+Model_path = os.path.join(set_up.PJ_path, 'chatglm3-6b')
 from transformers import AutoTokenizer, AutoModel
 tokenizer = AutoTokenizer.from_pretrained(Model_path, trust_remote_code=True)
 model = AutoModel.from_pretrained(Model_path, trust_remote_code=True, device='cuda')
 model = model.eval()
 
-logger_main.debug('Model_8 has been loaded.')
-
-def format_output(output):
-    try:
-        position = output.find("|")
-        zs = output.find("张三")
-        if position != -1:
-            First_appearance = output[:position].count("\n")
-        else:
-            return "No table responded"
-
-        lines = output.split("\n")
-        true_appearance = First_appearance + 2
-        if len(lines) < 3: 
-            return "Not enough data provided"
-        data = lines[true_appearance].split("|")
-        if len(data) < 6: 
-            return "Not enough data provided"
-        if zs != -1:
-            return "Zhangsan condition"
-        plaintiff = data[1].strip()
-        plaintiff_gender = data[2].strip()
-        defendants = data[3].strip()
-        defendant_gender = data[4].strip()
-        verdict = data[5].strip() if len(data) > 6 else "Data not responded"
-        reason = data[6].strip() if len(data) > 7 else "Data not responded"
-
-        return plaintiff, plaintiff_gender, defendants, defendant_gender, verdict, reason
-    except Exception as e:
-        return str(e)
+set_up.logger_main.debug('Model_8 has been loaded.')
 
 
 def process_data(df,file_name):
     df_output = pd.DataFrame()
     df_Toolong = pd.DataFrame()
-    open(os.path.join(LOG_path, '{}.log'.format(file_name)), 'w').close()
+    open(os.path.join(set_up.LOG_path, '{}.log'.format(file_name)), 'w').close()
     logger_b = logging.getLogger('logger_{}'.format(file_name))
     logger_b.setLevel(logging.DEBUG)
-    handler_b = logging.FileHandler(os.path.join(LOG_path, '{}.log'.format(file_name)))
+    handler_b = logging.FileHandler(os.path.join(set_up.LOG_path, '{}.log'.format(file_name)), encoding = 'utf-8')
     handler_b.setLevel(logging.DEBUG)
-    handler_b.setFormatter(public_formatter)
+    handler_b.setFormatter(set_up.public_formatter)
     logger_b.addHandler(handler_b)
     logger_b.debug(f"{file_name} started processing...\n")
-    num_rows = min(101, df.shape[0])
+    num_rows = min(3000, df.shape[0])
     logger_b.debug(f"Records num: {num_rows}\n")
     for i in range(num_rows):
         row = None
@@ -75,20 +46,22 @@ def process_data(df,file_name):
             df_Toolong = pd.concat([df_Toolong, TL_row], ignore_index=True)
 
         else:
-            prompt = str(cell_value) + bsc_prpt
+            prompt = str(cell_value) + set_up.bsc_prpt
             logger_b.debug(f"Prompt setted.\n")
             for trial in range(5):
                 logger_b.debug(f"Trial {trial} - started running...\n")
                 try:
                     st_time = time.time()
-                    response, history = model.chat(tokenizer, prompt, history=[])
-                    duration = time.time() - st_time
-                    logger_b.debug(f"Response {trial} in {duration:.3f} seconds: {response} \n")
-                except Exception as Error:
-                    row = pd.DataFrame({'File':file_name, 'Row':int(i), 'Trial':int(trial), 'Error': "Failed response", '原告': None, '原告性别': None, '被告': None, '被告性别': None, '被告是否胜诉': None, '判断的原因':None}, index=[0])
-                    logger_b.debug(f"Response failed. \n")
-                    break # 结束trial 循环，反正寄了，再试还是寄
-                data = format_output(response)
+                    history=[]
+                    response, history = func_timeout(set_up.time_8k, model.chat, args=(tokenizer, prompt, history))
+                except:
+                    response = None
+                    data = "Timed out."
+                duration = time.time() - st_time
+                logger_b.debug(f"Response {trial} in {duration:.3f} seconds: {response} \n")
+                if response:
+                    data = set_up.format_output(response)
+
                 logger_b.debug(f"Data: {str(data)}\n")
 
                 if not isinstance(data, str) and len(data) == 6:  # 如果format没毛病
@@ -102,5 +75,6 @@ def process_data(df,file_name):
         except:
             Error = "Variable `row` is undefined"
             logger_b.debug(f"Row {i} Error at appending: {Error}")
-    return df_output, df_Toolong
     logger_b.debug(f"{file_name} finished running.")
+    set_up.logger_main.debug(f"{file_name} finished running.")
+    return df_output, df_Toolong

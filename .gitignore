@@ -10,8 +10,9 @@ acu_results/
 id.sh
 acu_main.log
 old/
-WHO_TOOK_MY_CHEESE/Error.txt
-WHO_TOOK_MY_CHEESE/Out.txt
+WHO_TOUCHED_MY_CHEESE/Error.txt
+WHO_TOUCHED_MY_CHEESE/Out.txt
 last_run_info.pkl
 Out.txt
 Error.txt
+cpu_data/

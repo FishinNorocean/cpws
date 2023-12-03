@@ -2,7 +2,7 @@
 #SBATCH -p com
 #SBATCH -J cpu_cpws
 #SBATCH -N 1
-#SBATCH -n 24
+#SBATCH -n 16
 #SBATCH -o results/Out.txt
 #SBATCH -e results/Error.txt
 export PATH=/share/apps/cuda-12.1/bin:/share/apps/anaconda3/py385-2020.11/bin:$PATH 

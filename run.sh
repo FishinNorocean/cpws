@@ -2,7 +2,7 @@
 #SBATCH -p gpu
 #SBATCH -J nv_cpws
 #SBATCH -N 1
-#SBATCH -n 16
+#SBATCH -n 12
 #SBATCH --gres=gpu:1
 #SBATCH -o Out.txt
 #SBATCH -e Error.txt

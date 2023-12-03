@@ -3,7 +3,7 @@
 # This project is built up by Sang Wenkai(zju), in order to get data from Judgement Document with AI. (Also great gratitude to Zhe Yuan and Dengkun Chen for their warm and helpful guidance.)
 
 # Key options  VERY IMPORTANT 
-data_dir = 'data' 
+data_dir = '../trial_data' 
 log_dir = 'log'
 results_dir = 'results'
 max_threads = 4
@@ -29,21 +29,15 @@ os.makedirs(OUT_path, exist_ok=True)
 try:
     with open('last_run_info.pkl', 'rb') as file:
         loaded_data = pickle.load(file)
-    last_log, last_out, last_data = loaded_data 
-    if os.path.isfile("id.sh"):
-        subprocess.run("./id.sh", shell=True)
-        last_job_id = os.environ.get("last_job_id")
+    last_log, last_out, last_data,last_job_id = loaded_data 
     if last_job_id:
-        trash_dir = os.path.join(os.environ['HOME'], '.Trash/results_' + last_job_id)
-        os.rename(last_log, trash_dir)
-        os.rename(last_out, trash_dir)
+        trash_dir = os.path.join(os.environ['HOME'], f'.Trash/results_{last_job_id}')
+        subprocess.run(["mv", last_out, trash_dir])
+        subprocess.run(["mv", last_log, trash_dir])
     else:
         print("No last run.")
 except:
     print("No last run.")
-data_to_store = (LOG_path, OUT_path, DATA_path)
-with open('last_run_info.pkl', 'wb') as file:
-    pickle.dump(data_to_store, file)
 
 os.makedirs("acu_results", exist_ok=True)
 os.makedirs(LOG_path, exist_ok=True)
@@ -56,6 +50,10 @@ if result.returncode == 0:
     JOB_id = JOB_id[0:4]
 else:
     JOB_id = None
+
+data_to_store = (LOG_path, OUT_path, DATA_path, JOB_id)
+with open('last_run_info.pkl', 'wb') as file:
+    pickle.dump(data_to_store, file)
 
 # Log
 public_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')

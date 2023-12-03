@@ -105,13 +105,10 @@ with open("acu_main.log", "a") as acu_log_file:
     with open(os.path.join(set_up.LOG_path, 'main.log'), "r") as main_log:
         acu_log_file.write(main_log.read() + "\n")
 
-os.makedirs(os.path.join(ACU_path, 'out'))
-os.makedirs(os.path.join(ACU_path, 'data'))
-os.makedirs(os.path.join(ACU_path, 'log'))
 
-subprocess.run(["cp", "-r", set_up.OUT_path, os.path.join(ACU_path, 'out')])
-subprocess.run(["cp", "-r", set_up.DATA_path, os.path.join(ACU_path, 'data')])
-subprocess.run(["cp", "-r", set_up.LOG_path, os.path.join(ACU_path, 'log')])
+subprocess.run(["cp", "-r", set_up.OUT_path, ACU_path])
+subprocess.run(["cp", "-r", set_up.DATA_path, ACU_path])
+subprocess.run(["cp", "-r", set_up.LOG_path, ACU_path])
 
 set_up.logger_main.debug(f"Results backup done.")
 

@@ -14,7 +14,7 @@ model = AutoModel.from_pretrained(Model_path, trust_remote_code=True, device='cu
 model = model.eval()
 
 set_up.logger_main.debug('Model_8 has been loaded.')
-
+set_up.logger_acu.debug('Model_8 has been loaded.')
 
 def process_data(df,file_name):
     df_output = pd.DataFrame()
@@ -77,4 +77,5 @@ def process_data(df,file_name):
             logger_b.debug(f"Row {i} Error at appending: {Error}")
     logger_b.debug(f"{file_name} finished running.")
     set_up.logger_main.debug(f"{file_name} finished running.")
+    set_up.logger_acu.debug(f"{file_name} finished running.")
     return df_output, df_Toolong

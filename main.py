@@ -6,6 +6,7 @@ import pandas as pd, threading, logging, os, concurrent.futures, subprocess
 import set_up
 
 set_up.logger_main.debug("Main started running...")
+set_up.logger_acu.debug("Main started running...")
 
 # basic datafrmae
 df_output = pd.DataFrame(columns=["File","Row","Trial","Error", "原告", "原告性别", "被告", "被告性别", "被告是否胜诉", "判断的原因"])
@@ -27,6 +28,7 @@ elif set_up.Main_model == 'Qwen-14B-chat-int4':
 def process_data(df, file_name, option):
     global df_output, df_32k_output, df_Toolong, df_SToolong
     set_up.logger_main.debug(f"{file_name} started processing...")
+    set_up.logger_acu.debug(f"{file_name} started processing...")
     if option:
         if set_up.Add_model == 'glm3-6b-32k':
             import Processer_32  as add_processer
@@ -75,6 +77,8 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=set_up.max_threads) as ex
     concurrent.futures.wait(futures)
 
 set_up.logger_main.debug(f"All threads done.")
+set_up.logger_acu.debug(f"All threads done.")
+
 
 df_output.to_excel(os.path.join(set_up.OUT_path, 'output_8k.xlsx'), index=False)
 df_output.to_csv(os.path.join(set_up.OUT_path, 'output_8k.csv'), index=False)
@@ -85,20 +89,27 @@ df_output_sorted.to_csv(os.path.join(set_up.OUT_path, 'output_8k_sorted.csv'), i
 
 if not set_up.Add_model:
     set_up.logger_main.debug(f"No additional request.")
+    set_up.logger_acu.debug(f"No additional request.")
     df_Toolong.to_csv(os.path.join(set_up.OUT_path, 'TL-records.csv'), index=False)
 elif df_Toolong.empty:
     set_up.logger_main.debug(f"No docu too long.")
+    set_up.logger_acu.debug(f"No docu too long.")
 else:
     set_up.logger_main.debug(f"Some docu too long.")
+    set_up.logger_acu.debug(f"Some docu too long.")
     del main_processer
     df_Toolong.to_csv(os.path.join(set_up.OUT_path, 'TL-records.csv'), index=False)
     set_up.logger_main.debug(f"Additional procession started...")
+    set_up.logger_acu.debug(f"Additional procession started...")
     process_data(df_Toolong, "Additional_32k", True)
     set_up.logger_main.debug(f"Additional procession done.")
+    set_up.logger_acu.debug(f"Additional procession done.")
     if df_SToolong.empty:
         set_up.logger_main.debug(f"No docu still too long.")
+        set_up.logger_acu.debug(f"No docu still too long.")
     else:
         set_up.logger_main.debug(f"Some docu still too long.")
+        set_up.logger_acu.debug(f"Some docu still too long.")
         df_SToolong.to_csv(os.path.join(set_up.OUT_path, 'STL-records.csv'), index=False)
 
 df_output_sorted = df_output.sort_values(by=['File', 'Row'])
@@ -116,16 +127,17 @@ else:
 
 
 set_up.logger_main.debug(f"Main finished running.")
+set_up.logger_acu.debug(f"Main finished running.")
 
-with open("acu_main.log", "a") as acu_log_file:
-    acu_log_file.write(f"Jobid: {set_up.JOB_id}\n")
-    with open(os.path.join(set_up.LOG_path, 'main.log'), "r") as main_log:
-        acu_log_file.write(main_log.read() + "\n")
 
 
 subprocess.run(["cp", "-r", set_up.OUT_path, ACU_path])
 subprocess.run(["cp", "-r", set_up.DATA_path, ACU_path])
 subprocess.run(["cp", "-r", set_up.LOG_path, ACU_path])
+subprocess.run(["cp", os.path.join(set_up.PJ_path, 'Error.txt'), ACU_path])
+subprocess.run(["cp", os.path.join(set_up.PJ_path, 'Out.txt'), ACU_path])
 
 set_up.logger_main.debug(f"Results backup done.")
+set_up.logger_acu.debug(f"Results backup done.\n")
+
 

@@ -17,6 +17,8 @@ model = AutoModelForCausalLM.from_pretrained(
     trust_remote_code=True
 ).eval()
 set_up.logger_main.debug('Model_Q14-chat-int4 has been loaded.')
+set_up.logger_acu.debug('Model_Q14-chat-int4 has been loaded.')
+
 
 
 def process_data(df,file_name):
@@ -80,4 +82,5 @@ def process_data(df,file_name):
             logger_b.debug(f"Row {i} Error at appending: {Error}")
     logger_b.debug(f"{file_name} finished running.")
     set_up.logger_main.debug(f"{file_name} finished running.")
+    set_up.logger_acu.debug(f"{file_name} finished running.")
     return df_output, df_Toolong

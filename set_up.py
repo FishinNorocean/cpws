@@ -3,11 +3,16 @@
 # This project is built up by Sang Wenkai(zju), in order to get data from Judgement Document with AI. (Also great gratitude to Zhe Yuan and Dengkun Chen for their warm and helpful guidance.)
 
 # Key options  VERY IMPORTANT 
-data_dir = 'cpu_data' 
+data_dir = 'Pre_data/test_data' 
 log_dir = 'log'
 results_dir = 'results'
-max_threads = 3
-Main_model = 'Qwen-14B-chat-int4' # or 'glm3-6b-8k'
+
+
+with open('parameters.txt', 'r') as file:
+    params = file.readline().strip().split(',')
+
+max_threads = int(params[0])
+Main_model = params[1] # or 'glm3-6b-8k'
 Add_model = None
 
 # e.g. 'data'. Put all your unprocessed data files in a directory and input the directory 
@@ -68,6 +73,14 @@ main_handler.setLevel(logging.DEBUG)
 main_handler.setFormatter(public_formatter)
 logger_main.addHandler(main_handler)
 
+
+logger_acu = logging.getLogger('logger_acu')
+logger_acu.setLevel(logging.DEBUG)
+handler_acu = logging.FileHandler(os.path.join(PJ_path, 'acu_main.log'), encoding = 'utf-8')
+handler_acu.setLevel(logging.DEBUG)
+handler_acu.setFormatter(public_formatter)
+logger_acu.addHandler(handler_acu)
+
 open(os.path.join(LOG_path, 'files.log'), 'w').close()
 logger_files = logging.getLogger('logger_files')
 logger_files.setLevel(logging.DEBUG)
@@ -106,5 +119,5 @@ def format_output(output):
         return str(e)
 
 logger_main.debug("Set up done.")
-
+logger_acu.debug("Set up done.")
 

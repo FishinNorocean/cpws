@@ -14,6 +14,7 @@ model = AutoModel.from_pretrained(Model_path, trust_remote_code=True).half().cud
 model = model.eval()
 
 set_up.logger_main.debug('Model_32 has been loaded.')
+set_up.logger_acu.debug('Model_32 has been loaded.')
 
 def respond_in_time(tokenizer, model, prompt, time_lim):
     def handler(signum, frame):
@@ -89,4 +90,5 @@ def process_data(df,file_name):
             logger_b.debug(f"Row {i} Error at appending: {Error}")
     logger_b.debug(f"{file_name} finished running.")
     set_up.logger_main.debug(f"{file_name} finished running.")
+    set_up.logger_acu.debug(f"{file_name} finished running.")
     return df_output, df_Toolong

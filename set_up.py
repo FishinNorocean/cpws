@@ -7,6 +7,7 @@ data_dir = '../trial_data'
 log_dir = 'log'
 results_dir = 'results'
 max_threads = 4
+Model = 'Q1_8-C-8'
 
 # e.g. 'data'. Put all your unprocessed data files in a directory and input the directory 
 

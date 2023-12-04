@@ -13,18 +13,31 @@ df_32k_output = df_output
 df_Toolong = pd.DataFrame()
 df_SToolong = pd.DataFrame()
 
-import Processer_8
+# Select the right model
+if set_up.Main_model == 'glm3-6b-8k':
+    import Processer_8  as main_processer
+elif set_up.Main_model == 'Qwen-1_8B-chat-int8':
+    import Q1_8_c_8  as main_processer
+elif set_up.Main_model == 'Qwen-7B-chat-int4':
+    import Q7_c_4  as main_processer
+elif set_up.Main_model == 'Qwen-14B-chat-int4':
+    import Q14_c_4 as main_processer
+
 
 def process_data(df, file_name, option):
     global df_output, df_32k_output, df_Toolong, df_SToolong
     set_up.logger_main.debug(f"{file_name} started processing...")
     if option:
-        import Processer_32
-        df_th_mid, df_TL_mid = Processer_32.process_data(df,file_name)
+        if set_up.Add_model == 'glm3-6b-32k':
+            import Processer_32  as add_processer
+        # elif set_up.Main_model == 'Q1_8-C-8':
+            # import Q1_8_c_8  as main_processer
+        
+        df_th_mid, df_TL_mid = add_processer.process_data(df,file_name)
         df_SToolong = pd.concat([df_SToolong, df_TL_mid], ignore_index=True)
         df_32k_output = pd.concat([df_32k_output, df_th_mid], ignore_index=True)
     else:
-        df_th_mid, df_TL_mid = Processer_8.process_data(df,file_name)
+        df_th_mid, df_TL_mid = main_processer.process_data(df,file_name)
         df_Toolong = pd.concat([df_Toolong, df_TL_mid], ignore_index=True)
     df_output = pd.concat([df_output, df_th_mid], ignore_index=True)
 
@@ -70,15 +83,23 @@ df_output_sorted = df_output.sort_values(by=['File', 'Row'])
 df_output_sorted.to_excel(os.path.join(set_up.OUT_path, 'output_8k_sorted.xlsx'), index=False)
 df_output_sorted.to_csv(os.path.join(set_up.OUT_path, 'output_8k_sorted.csv'), index=False)
 
-if df_Toolong.empty:
+if not set_up.Add_model:
+    set_up.logger_main.debug(f"No additional request.")
+    df_Toolong.to_csv(os.path.join(set_up.OUT_path, 'TL-records.csv'), index=False)
+elif df_Toolong.empty:
     set_up.logger_main.debug(f"No docu too long.")
 else:
     set_up.logger_main.debug(f"Some docu too long.")
-    del Processer_8
+    del main_processer
     df_Toolong.to_csv(os.path.join(set_up.OUT_path, 'TL-records.csv'), index=False)
     set_up.logger_main.debug(f"Additional procession started...")
     process_data(df_Toolong, "Additional_32k", True)
     set_up.logger_main.debug(f"Additional procession done.")
+    if df_SToolong.empty:
+        set_up.logger_main.debug(f"No docu still too long.")
+    else:
+        set_up.logger_main.debug(f"Some docu still too long.")
+        df_SToolong.to_csv(os.path.join(set_up.OUT_path, 'STL-records.csv'), index=False)
 
 df_output_sorted = df_output.sort_values(by=['File', 'Row'])
 df_32k_output_sorted = df_32k_output.sort_values(by=['File', 'Row'])
@@ -86,11 +107,7 @@ df_output_sorted.to_excel(os.path.join(set_up.OUT_path, 'output_all_sorted.xlsx'
 df_output_sorted.to_csv(os.path.join(set_up.OUT_path, 'output_all_sorted.csv'), index=False)
 df_32k_output_sorted.to_csv(os.path.join(set_up.OUT_path, 'output_32k_sorted.csv'), index=False)
 
-if df_SToolong.empty:
-    set_up.logger_main.debug(f"No docu still too long.")
-else:
-    set_up.logger_main.debug(f"Some docu still too long.")
-    df_SToolong.to_csv(os.path.join(set_up.OUT_path, 'STL-records.csv'), index=False)
+
     
 if df_output.shape[0] == total_num:
     ACU_path = os.path.join(set_up.PJ_path, f'acu_results/Job_{set_up.JOB_id}_P')

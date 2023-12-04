@@ -3,11 +3,12 @@
 # This project is built up by Sang Wenkai(zju), in order to get data from Judgement Document with AI. (Also great gratitude to Zhe Yuan and Dengkun Chen for their warm and helpful guidance.)
 
 # Key options  VERY IMPORTANT 
-data_dir = '../trial_data' 
+data_dir = 'cpu_data' 
 log_dir = 'log'
 results_dir = 'results'
-max_threads = 4
-Model = 'Q1_8-C-8'
+max_threads = 3
+Main_model = 'Qwen-14B-chat-int4' # or 'glm3-6b-8k'
+Add_model = None
 
 # e.g. 'data'. Put all your unprocessed data files in a directory and input the directory 
 

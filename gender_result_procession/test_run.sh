@@ -29,4 +29,3 @@ echo "1,Qwen-14B-chat-int4" > parameters.txt
 python main.py
 echo "2,Qwen-14B-chat-int4" > parameters.txt
 python main.py
-pkill -f GPU_check.sh

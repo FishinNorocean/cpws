@@ -121,9 +121,9 @@ df_32k_output_sorted.to_csv(os.path.join(set_up.OUT_path, 'output_32k_sorted.csv
 
     
 if df_output.shape[0] == total_num:
-    ACU_path = os.path.join(set_up.PJ_path, f'acu_results/Job_{set_up.JOB_id}_P')
+    ACU_path = os.path.join(set_up.PJ_path, f'acu_results/results_{set_up.JOB_id}-{set_up.DATA_path.rsplit("/", 1)[1]}-{str(set_up.Main_model)[:7]}-{str(set_up.Add_model)[:7]}-{set_up.max_threads}_P')
 else:
-    ACU_path = os.path.join(set_up.PJ_path, f'acu_results/Job_{set_up.JOB_id}_F')
+    ACU_path = os.path.join(set_up.PJ_path, f'acu_results/results_{set_up.JOB_id}-{set_up.DATA_path.rsplit("/", 1)[1]}-{str(set_up.Main_model)[:7]}-{str(set_up.Add_model)[:7]}-{set_up.max_threads}_F')
 
 
 set_up.logger_main.debug(f"Main finished running.")

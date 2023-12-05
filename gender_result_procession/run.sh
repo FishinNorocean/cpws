@@ -10,4 +10,3 @@ export PATH=/share/apps/cuda-12.1/bin:/share/apps/anaconda3/py385-2020.11/bin:$P
 
 ./GPU_check.sh &
 python main.py
-pkill -f GPU_check.sh

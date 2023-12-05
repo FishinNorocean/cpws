@@ -3,7 +3,7 @@
 # This project is built up by Sang Wenkai(zju), in order to get data from Judgement Document with AI. (Also great gratitude to Zhe Yuan and Dengkun Chen for their warm and helpful guidance.)
 
 # Key options  VERY IMPORTANT 
-data_dir = 'Pre_data/test_data' 
+data_dir = 'Pre_data/cpu_data' #'Pre_data/test_data' 
 log_dir = 'log'
 results_dir = 'results'
 
@@ -33,18 +33,21 @@ DATA_path = os.path.join(PJ_path, data_dir)
 os.makedirs(LOG_path, exist_ok=True)
 os.makedirs(OUT_path, exist_ok=True)
 
-try:
+if os.path.exists('last_run_info.pkl'):
     with open('last_run_info.pkl', 'rb') as file:
         loaded_data = pickle.load(file)
-    last_log, last_out, last_data,last_job_id = loaded_data 
-    if last_job_id:
-        trash_dir = os.path.join(os.environ['HOME'], f'.Trash/results_{last_job_id}')
-        subprocess.run(["mv", last_out, trash_dir])
-        subprocess.run(["mv", last_log, trash_dir])
-    else:
-        print("No last run.")
-except:
-    print("No last run.")
+    try:
+        last_log, last_out, last_data_dir, last_job_id,  last_main_model, last_add_model, last_max_threads = loaded_data 
+        if last_job_id:
+            trash_dir = os.path.join(os.environ['HOME'], f'.Trash/results_{last_job_id}-{DATA_path.rsplit("/",1)[1]}-{str(last_main_model)[:7]}-{str(last_add_model)[:7]}-{max_threads}')
+            subprocess.run(["mv", last_out, trash_dir])
+            subprocess.run(["mv", last_log, trash_dir])
+        else:
+            print("No data in last run variable data file.")
+    except:
+        print("Data format doesn't match.")
+else:
+    print("Last run variable data file not exists.")
 
 os.makedirs("acu_results", exist_ok=True)
 os.makedirs(LOG_path, exist_ok=True)
@@ -58,7 +61,7 @@ if result.returncode == 0:
 else:
     JOB_id = None
 
-data_to_store = (LOG_path, OUT_path, DATA_path, JOB_id)
+data_to_store = (LOG_path, OUT_path, DATA_path, JOB_id, Main_model, Add_model, max_threads)
 with open('last_run_info.pkl', 'wb') as file:
     pickle.dump(data_to_store, file)
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 echo "Initializing..."
-cd "$HOME/swk_cpws_1.0/"
+cd "$HOME/swk_cpws_1.0/gender_result_procession"
 
-
+touch acu_main.log
 mkdir -p acu_results
 echo "Done."
 

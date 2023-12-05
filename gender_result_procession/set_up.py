@@ -3,21 +3,22 @@
 # This project is built up by Sang Wenkai(zju), in order to get data from Judgement Document with AI. (Also great gratitude to Zhe Yuan and Dengkun Chen for their warm and helpful guidance.)
 
 # Key options  VERY IMPORTANT 
-data_dir = 'Pre_data/cpu_data' #'Pre_data/test_data' 
-log_dir = 'log'
-results_dir = 'results'
-
-
 with open('parameters.txt', 'r') as file:
     params = file.readline().strip().split(',')
 
-max_threads = int(params[0])
-Main_model = params[1] # or 'glm3-6b-8k'
-Add_model = None
-
-# e.g. 'data'. Put all your unprocessed data files in a directory and input the directory 
+data_dir = params[0]
+max_threads = int(params[1])
+Main_model = params[2] 
+if params[3] == 'None':
+    Add_model = None
+else:
+    Add_model = params[3]
 
 bsc_prpt="请你从这段文本中找到原告, 原告性别（若是企业则回答企业）, 被告, 被告性别（若是企业则回答企业）, 并判断被告是否胜诉（并说明原因），回答格式为markdown表格代码，原告：，原告性别：，被告：，被告性别：，被告是否胜诉：，这么判断胜诉与否的原因： "# basic prompt
+
+# Don't change the following two variables if you don't want a lot of modifications.
+log_dir = 'log'
+results_dir = 'results'
 
 time_8k = 30 #Time limit for each trial in 8k model. 
 time_32k = 30 #Time limit for each trial in 32k model. 
@@ -29,7 +30,7 @@ import logging, os, subprocess, pickle
 PJ_path = os.path.dirname(os.path.abspath(__file__))
 LOG_path = os.path.join(PJ_path, log_dir)
 OUT_path = os.path.join(PJ_path, results_dir)
-DATA_path = os.path.join(PJ_path, data_dir)
+DATA_path = os.path.join(PJ_path, f"../Pre_data/{data_dir}")
 os.makedirs(LOG_path, exist_ok=True)
 os.makedirs(OUT_path, exist_ok=True)
 
@@ -83,6 +84,9 @@ handler_acu = logging.FileHandler(os.path.join(PJ_path, 'acu_main.log'), encodin
 handler_acu.setLevel(logging.DEBUG)
 handler_acu.setFormatter(public_formatter)
 logger_acu.addHandler(handler_acu)
+
+logger_main.debug(f"Data: {data_dir}, Threads: {max_threads}, Main: {Main_model}, Add: {str(Add_model)}.")
+logger_acu.debug(f"Data: {data_dir}, Threads: {max_threads}, Main: {Main_model}, Add: {str(Add_model)}.")
 
 open(os.path.join(LOG_path, 'files.log'), 'w').close()
 logger_files = logging.getLogger('logger_files')

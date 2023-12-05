@@ -2,12 +2,12 @@
 
 # This project is built up by Sang Wenkai(zju), in order to get data from Judgement Document with AI. (Also great gratitude to Zhe Yuan and Dengkun Chen for their warm and helpful guidance.)
 
-import pandas as pd, threading, logging, os, concurrent.futures, subprocess
+import pandas as pd, threading, logging, os, concurrent.futures, subprocess, time
 import set_up
 
 set_up.logger_main.debug("Main started running...")
 set_up.logger_acu.debug("Main started running...")
-
+start_time = time.time()
 # basic datafrmae
 df_output = pd.DataFrame(columns=["File","Row","Trial","Error", "原告", "原告性别", "被告", "被告性别", "被告是否胜诉", "判断的原因"])
 df_32k_output = df_output
@@ -118,7 +118,8 @@ df_output_sorted.to_excel(os.path.join(set_up.OUT_path, 'output_all_sorted.xlsx'
 df_output_sorted.to_csv(os.path.join(set_up.OUT_path, 'output_all_sorted.csv'), index=False)
 df_32k_output_sorted.to_csv(os.path.join(set_up.OUT_path, 'output_32k_sorted.csv'), index=False)
 
-
+duration = time.time() - start_time
+formatted_duration = time.strftime("%H:%M:%S", time.gmtime(duration))
     
 if df_output.shape[0] == total_num:
     ACU_path = os.path.join(set_up.PJ_path, f'acu_results/results_{set_up.JOB_id}-{set_up.DATA_path.rsplit("/", 1)[1]}-{str(set_up.Main_model)[:7]}-{str(set_up.Add_model)[:7]}-{set_up.max_threads}_P')
@@ -126,8 +127,8 @@ else:
     ACU_path = os.path.join(set_up.PJ_path, f'acu_results/results_{set_up.JOB_id}-{set_up.DATA_path.rsplit("/", 1)[1]}-{str(set_up.Main_model)[:7]}-{str(set_up.Add_model)[:7]}-{set_up.max_threads}_F')
 
 
-set_up.logger_main.debug(f"Main finished running.")
-set_up.logger_acu.debug(f"Main finished running.")
+set_up.logger_main.debug(f"Main finished running: {formatted_duration}.")
+set_up.logger_acu.debug(f"Main finished running: {formatted_duration}.")
 
 
 

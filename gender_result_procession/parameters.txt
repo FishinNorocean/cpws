@@ -1,1 +1,1 @@
-2,Qwen-14B-chat-int4
+cpu_data,2,Qwen-14B-chat-int4,None

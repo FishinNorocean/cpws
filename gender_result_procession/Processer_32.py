@@ -7,7 +7,7 @@ import pandas as pd, logging, time, os, set_up
 from func_timeout import func_timeout
 
 # import the model and initialize the dialog
-Model_path = os.path.join(set_up.PJ_path, 'chatglm3-6b-32k')
+Model_path = os.path.join(set_up.PJ_path, '../Models/chatglm3-6b-32k')
 from transformers import AutoTokenizer, AutoModel
 tokenizer = AutoTokenizer.from_pretrained(Model_path, trust_remote_code=True)
 model = AutoModel.from_pretrained(Model_path, trust_remote_code=True).half().cuda()

@@ -1,0 +1,23 @@
+# Here is a mission dashboard to control the processions.
+# We read each valid row and lauch a procession. Do make sure your rows have the right format.
+# We read until first blank row.
+# Rows begin with "#" will be ignored.
+# args: data,threads,Main model,Additional Model(for prpts longer than 8k).
+# data: the data folder name you put in `../Pre_data/folder_name`, "folder_name" in the e.g. case.
+# threads: max simultaneous thread number
+# Main model: choose a folder name of models in `../Models` except '32k'. E.g. "Qwen-1_8B-Chat-Int8"
+# Additional Model: similar to Main model, temporarily only nothing or chatglm3-6b-32k
+# A valid example: (No blanks among each row!)
+# "cpu_data,2,Qwen-1_8B-Chat-Int,None"
+test_data,1,glm3-6b-8k,None
+test_data,2,glm3-6b-8k,None
+test_data,3,glm3-6b-8k,None
+test_data,1,Qwen-1_8B-chat-int8,None
+test_data,2,Qwen-1_8B-chat-int8,None
+test_data,3,Qwen-1_8B-chat-int8,None
+test_data,1,Qwen-7B-chat-int4,None
+test_data,2,Qwen-7B-chat-int4,None
+test_data,1,Qwen-14B-chat-int4,None
+test_data,2,Qwen-14B-chat-int4,None
+
+

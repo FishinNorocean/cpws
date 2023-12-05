@@ -13,5 +13,5 @@ else
         fi
         result+="${array[i]}"  # 添加数组元素到结果字符串
     done
-    watch -n 1 "sacct -j $result --field=jobid,jobname,nodelist,elapsed,state; tail -n 30 gpu_status.log; echo \"main.log:\"; tail log/main.log; echo \"Out & Error:\";cat Out.txt Error.txt"
+    watch -n 1 "sacct -j $result --field=jobid,jobname,nodelist,elapsed,state; tail -n 30 ../gpu_status.log; echo \"tail acu_main.log:\"; tail acu_main.log; echo \"Out & Error:\";cat Out.txt Error.txt"
 fi

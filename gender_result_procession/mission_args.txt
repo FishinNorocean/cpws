@@ -8,5 +8,6 @@
 # Main model: choose a folder name of models in `../Models` except '32k'. E.g. "Qwen-1_8B-Chat-Int8"
 # Additional Model: similar to Main model, temporarily only nothing or chatglm3-6b-32k
 # A valid example: (No blanks among each row!)
-# "cpu_data,2,Qwen-1_8B-Chat-Int,None"
-
+# "cpu_data,2,Qwen-1_8B-Chat-Int8,None"
+# Main model list: 'glm3-6b-8k', 'Qwen-1_8B-Chat-Int8', 'Qwen-7B-Chat-Int4', 'Qwen-14B-Chat-Int4'
+# Additional model list: 'glm3-6b-32k'

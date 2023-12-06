@@ -5,5 +5,3 @@ log/*
 results/*
 !results/.gitkeep
 last_run_info.pkl
-*.log
-*.txt

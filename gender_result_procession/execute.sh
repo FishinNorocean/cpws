@@ -1,8 +1,6 @@
 #!/bin/bash
 echo "Initializing..."
 git update-index --assume-unchanged acu_main.log Error.txt gpu_status.log id.sh mission_args.txt Out.txt parameters.txt log/.gitkeep results/.gitkeep ../Models/.gitkeep ../Pre_data/.gitkeep
-touch acu_main.log
-mkdir -p acu_results
 echo "Done."
 
 job_id=$(sbatch run.sh | awk '{print $4}')

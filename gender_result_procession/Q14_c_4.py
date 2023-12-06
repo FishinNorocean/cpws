@@ -15,7 +15,6 @@ model = AutoModelForCausalLM.from_pretrained(
     Model_path,
     device_map="auto",
     trust_remote_code=True,
-    fp16=True
 ).eval()
 set_up.logger_main.debug('Model_Q14-chat-int4 has been loaded.')
 set_up.logger_acu.debug('Model_Q14-chat-int4 has been loaded.')

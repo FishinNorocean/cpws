@@ -2,7 +2,7 @@
 
 # This project is built up by Sang Wenkai(zju), in order to get data from Judgement Document with AI. (Also great gratitude to Zhe Yuan and Dengkun Chen for their warm and helpful guidance.)
 
-import pandas as pd, threading, logging, os, concurrent.futures, subprocess, time
+import pandas as pd, logging, os, concurrent.futures, subprocess, time
 import set_up
 
 set_up.logger_main.debug("Main started running...")

@@ -31,8 +31,6 @@ PJ_path = os.path.dirname(os.path.abspath(__file__))
 LOG_path = os.path.join(PJ_path, log_dir)
 OUT_path = os.path.join(PJ_path, results_dir)
 DATA_path = os.path.join(PJ_path, f"../Pre_data/{data_dir}")
-os.makedirs(LOG_path, exist_ok=True)
-os.makedirs(OUT_path, exist_ok=True)
 
 if os.path.exists('last_run_info.pkl'):
     with open('last_run_info.pkl', 'rb') as file:

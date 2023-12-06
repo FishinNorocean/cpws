@@ -17,12 +17,14 @@ df_SToolong = pd.DataFrame()
 # Select the right model
 if set_up.Main_model == 'glm3-6b-8k':
     import Processer_8  as main_processer
-elif set_up.Main_model == 'Qwen-1_8B-chat-int8':
+elif set_up.Main_model == 'Qwen-1_8B-Chat-int8':
     import Q1_8_c_8  as main_processer
-elif set_up.Main_model == 'Qwen-7B-chat-int4':
+elif set_up.Main_model == 'Qwen-7B-Chat-int4':
     import Q7_c_4  as main_processer
-elif set_up.Main_model == 'Qwen-14B-chat-int4':
+elif set_up.Main_model == 'Qwen-14B-Chat-int4':
     import Q14_c_4 as main_processer
+else:
+    set_up.logger_main.error(f"Model name Error! Invalid name:{set_up.Main_model}")
 
 
 def process_data(df, file_name, option):

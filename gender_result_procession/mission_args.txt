@@ -9,15 +9,4 @@
 # Additional Model: similar to Main model, temporarily only nothing or chatglm3-6b-32k
 # A valid example: (No blanks among each row!)
 # "cpu_data,2,Qwen-1_8B-Chat-Int,None"
-test_data,1,glm3-6b-8k,None
-test_data,2,glm3-6b-8k,None
-test_data,3,glm3-6b-8k,None
-test_data,1,Qwen-1_8B-chat-int8,None
-test_data,2,Qwen-1_8B-chat-int8,None
-test_data,3,Qwen-1_8B-chat-int8,None
-test_data,1,Qwen-7B-chat-int4,None
-test_data,2,Qwen-7B-chat-int4,None
-test_data,1,Qwen-14B-chat-int4,None
-test_data,2,Qwen-14B-chat-int4,None
-
 

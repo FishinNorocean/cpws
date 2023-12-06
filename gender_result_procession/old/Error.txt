@@ -1,0 +1,6 @@
+/var/spool/slurm/d/job07964/slurm_script: line 11: ./GPU_check.sh: No such file or directory
+Traceback (most recent call last):
+  File "trial.py", line 1, in <module>
+    import pandas as pd, logging, time, os, set_up
+ModuleNotFoundError: No module named 'set_up'
+pkill: killing pid 204936 failed: Operation not permitted

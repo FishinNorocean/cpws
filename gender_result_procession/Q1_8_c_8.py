@@ -14,7 +14,8 @@ tokenizer = AutoTokenizer.from_pretrained(Model_path, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(
     Model_path,
     device_map="auto",
-    trust_remote_code=True
+    trust_remote_code=True,
+    fp16=True
 ).eval()
 set_up.logger_main.debug('Model_Q1_8-chat-int8 has been loaded.')
 set_up.logger_acu.debug('Model_Q1_8-chat-int8 has been loaded.')

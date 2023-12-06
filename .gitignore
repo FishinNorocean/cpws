@@ -1,6 +1,9 @@
 __pycache__/
-gpu_status.log
-acu_results/
-WHO_TOUCHED_MY_CHEESE/*.txt
-Pre_data/
-Models/
+WHO_TOUCHED_MY_CHEESE/*
+WHO_TOUCHED_MY_CHEESE/check_it_out.sh
+
+Pre_data/*
+!Pre_data/.gitkeep
+
+Models/*
+!Models/.gitkeep

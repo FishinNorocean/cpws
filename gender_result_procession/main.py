@@ -137,6 +137,7 @@ subprocess.run(["cp", "-r", set_up.DATA_path, ACU_path])
 subprocess.run(["cp", "-r", set_up.LOG_path, ACU_path])
 subprocess.run(["cp", os.path.join(set_up.PJ_path, 'Error.txt'), ACU_path])
 subprocess.run(["cp", os.path.join(set_up.PJ_path, 'Out.txt'), ACU_path])
+subprocess.run(["cp", os.path.join(set_up.PJ_path, 'gpu_status.log'), ACU_path])
 
 set_up.logger_main.debug(f"Results backup done.")
 set_up.logger_acu.debug(f"Results backup done.\n")

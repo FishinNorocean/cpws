@@ -1,4 +1,4 @@
-# Qwen-7B-chat-int4 Model Processer
+# Qwen-7B Model Processer
 
 # This project is built up by Sang Wenkai(zju), in order to get data from Judgement Document with AI. (Also great gratitude to Zhe Yuan and Dengkun Chen for their warm and helpful guidance.)
 
@@ -7,17 +7,18 @@ import pandas as pd, logging, time, os, set_up
 from func_timeout import func_timeout
 
 # import the model and initialize the dialog
-Model_path = os.path.join(set_up.PJ_path, '../Models/Qwen-7B-Chat-Int4')
+Model_path = os.path.join(set_up.PJ_path, '../Models/Qwen-7B')
 from transformers import AutoModelForCausalLM, AutoTokenizer
 tokenizer = AutoTokenizer.from_pretrained(Model_path, trust_remote_code=True)
 
 model = AutoModelForCausalLM.from_pretrained(
     Model_path,
     device_map="auto",
-    trust_remote_code=True
+    trust_remote_code=True,
+    fp16=True
 ).eval()
-set_up.logger_main.debug('Model_Q7-chat-int4 has been loaded.')
-set_up.logger_acu.debug('Model_Q7-chat-int4 has been loaded.')
+set_up.logger_main.debug('Model_Q7 has been loaded.')
+set_up.logger_acu.debug('Model_Q7 has been loaded.')
 
 
 def process_data(df,file_name):

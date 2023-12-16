@@ -23,6 +23,18 @@ elif set_up.Main_model == 'Qwen-7B-Chat-Int4':
     import Q7_c_4  as main_processer
 elif set_up.Main_model == 'Qwen-14B-Chat-Int4':
     import Q14_c_4 as main_processer
+elif set_up.Main_model == 'Qwen-1_8B':
+    import Q1_8 as main_processer
+elif set_up.Main_model == 'Qwen-7B':
+    import Q7  as main_processer
+elif set_up.Main_model == 'Qwen-14B':
+    import Q14 as main_processer
+elif set_up.Main_model == 'Qwen-1_8B-Chat':
+    import Q1_8_c  as main_processer
+elif set_up.Main_model == 'Qwen-7B-Chat':
+    import Q7_c  as main_processer
+elif set_up.Main_model == 'Qwen-14B-Chat':
+    import Q14_c as main_processer
 else:
     set_up.logger_main.error(f"Model name Error! Invalid name:{set_up.Main_model}")
 

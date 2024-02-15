@@ -5,7 +5,7 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-proxy_address="$1:7890"  # 添加端口号
+proxy_address="$1:10809"  # 添加端口号
 
 git config --global http.proxy "$proxy_address"
 git config --global https.proxy "$proxy_address"

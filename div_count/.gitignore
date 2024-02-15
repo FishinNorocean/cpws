@@ -1,0 +1,7 @@
+acu_results/*
+!acu_results/.gitkeep
+log/*
+!log/.gitkeep
+results/*
+!results/.gitkeep
+last_run_info.pkl
